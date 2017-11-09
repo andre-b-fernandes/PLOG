@@ -1,12 +1,15 @@
+:- use_module(library(lists)).
+
 /*MANIPULAR O TABULEIRO*/
+
 
 getPeca(NLinha, NColuna, Tabuleiro, Peca):- getPecaLinha(NLinha,Tabuleiro,Linha), getPecaColuna(NColuna, Linha, Peca).
 
-getPecaLinha(NLinha, [H|T], Linha):- Previous is NLinha-1, getPecaLinha(Previous, T, Linha).
-getPecaLinha(1, [H|T], H).
+getPecaLinha(NLinha, [_|T], Linha):- Previous is NLinha-1, getPecaLinha(Previous, T, Linha).
+getPecaLinha(1, [H|_], H).
 
-getPecaColuna(NColuna, [H|T], Peca):- Previous is NColuna-1, getPecaColuna(Previous, T, Peca).
-getPecaColuna(1, [H|T], H).
+getPecaColuna(NColuna, [_|T], Peca):- Previous is NColuna-1, getPecaColuna(Previous, T, Peca).
+getPecaColuna(1, [H|_], H).
 
 setPeca(NLinha, NColuna, Peca,TabIn, TabOut):- setPecaLinha(NLinha, NColuna,TabIn, Peca, TabOut).
 
@@ -20,15 +23,20 @@ setPecaColuna(1,[_| Resto],Peca,[Peca|Resto]).
 
 /*LINHA*/
 
-viraPecasLinha([],Peca,[]).
-viraPecasLinha([Peca|R],Peca,[Peca|T]):-viraPecasLinha(R,Peca,T).
-viraPecasLinha(['e'|R],Peca,['e'|T]):-viraPecasLinha(R,Peca,T).
-viraPecasLinha([P|R],Peca,[Peca|T]):-viraPecasLinha(R,Peca,T).
+viraPecasLinha([],_,[]).
+viraPecasLinha(['e'|R],Peca,['e'|T]):-viraPecasLinha(R,Peca,T), !.
+viraPecasLinha([_|R],Peca,[Peca|T]):-viraPecasLinha(R,Peca,T), !.
 
 verificaViraPecasLinha(Linha, NColuna,Peca):-
   contaPecasLinha(Linha, Peca, C),
   C == 2,
   verificaEspacosLinha(Linha,NColuna,Peca).
+
+
+/*posicoesPeca(Linha, Peca, Pos, Po):- posicaoPeca(Linha, )
+
+posicaoPeca([Peca|_], Peca, 1).
+posicaoPeca([_|T], Peca, Pos):- posicaoPeca(T, Peca, NewPos), Pos is NewPos + 1.*/
 
 
 contaPecasLinha([],_,0).
@@ -48,28 +56,28 @@ verificaEspacosLinha(Linha,NColuna,Peca):-
 
 avancaLinha([P|Resto],0,[P|Resto]).
 
-avancaLinha([P|Resto],NColuna,LinhaAvancada):-
+avancaLinha([_|Resto],NColuna,LinhaAvancada):-
   Nc is NColuna-1,
   avancaLinha(Resto,Nc,LinhaAvancada).
 
-verificaAtras([Peca|Resto],2,Peca).
+verificaAtras([Peca|_],2,Peca).
 
 verificaAtras([Peca|Resto], NColuna, Peca):-
   Nc is NColuna-1,
   verificaAtrasPeca(Resto, Nc).
 
-verificaAtras([P|Resto], NColuna, Peca):-
+verificaAtras([_|Resto], NColuna, Peca):-
   Nc is NColuna-1,
   verificaAtras(Resto, Nc,Peca).
 
-verificaAtrasPeca([P|Resto], 1).
+verificaAtrasPeca([_|_], 1).
 
 verificaAtrasPeca([P|Resto], NColuna):-
   P \= 'e',
   Nc is NColuna-1,
   verificaAtrasPeca(Resto,Nc).
 
-verificaFrente([Peca|Resto],NColuna,Peca).
+verificaFrente([Peca|_],_,Peca).
 
 verificaFrente([P|Resto],NColuna,Peca):-
   P\='e',
@@ -79,9 +87,73 @@ verificaFrente([P|Resto],NColuna,Peca):-
 
 
 /*COLUNAS*/
-
 contaPecasColuna([],_,_,0).
-contaPecasColuna([L|T], NColuna, Peca,Contagem):- contaPecasColuna(T,NColuna,Peca,NovaContagem), contaLinha(L, NColuna, Peca),Contagem is NovaContagem + 1.
+contaPecasColuna([Linha|Mais], Coluna, Peca, N):-
+  nth1(Coluna, Linha, Peca),
+  contaPecasColuna(Mais, Coluna, Peca, Alguns),
+  N is Alguns + 1.
+contaPecasColuna([_|Mais], Coluna,Peca,N):-contaPecasColuna(Mais, Coluna, Peca, N).
 
-contaLinha([Peca|T],1,Peca).
-contaLinha([P|T],NColuna,Peca):-Nc is NColuna-1, contaLinha(T,Nc,Peca).
+verificaFrenteColuna([Linha|_],_, NColuna, Peca):-nth1(NColuna,Linha,Peca).
+verificaFrenteColuna([Linha|Resto], NLinha, NColuna, Peca):-
+   nth1(NColuna, Linha,X),
+   X \= 'e',
+   Nl is NLinha + 1,
+   Nl =< 7,
+   verificaFrenteColuna(Resto,Nl, NColuna, Peca).
+
+
+verificaAtrasColuna([Linha|_],2,NColuna,Peca):- nth1(NColuna,Linha,Peca).
+verificaAtrasColuna([Linha|Resto], NLinha, NColuna, Peca):-
+  nth1(NColuna,Linha, Peca),
+  Nl is NLinha -1,
+  verificaAtrasColunaPeca(Resto,Nl, NColuna).
+verificaAtrasColuna([_|Resto], NLinha, NColuna, Peca):-
+  Nl is NLinha - 1,
+  verificaAtrasColuna(Resto, Nl, NColuna, Peca).
+
+verificaAtrasColunaPeca([_|_], 1, _).
+verificaAtrasColunaPeca([Linha|Resto], NLinha, NColuna):-
+   nth1(NColuna, Linha, X),
+   X \= 'e',
+   Nl is NLinha -1,
+   verificaAtrasColunaPeca(Resto, Nl, NColuna).
+
+
+verificaEspacosColuna(Tabuleiro, NLinha, NColuna, Peca):-
+  verificaAtrasColuna(Tabuleiro, NLinha, NColuna, Peca);
+  avancaLinha(Tabuleiro, NLinha, RestoTab),
+  verificaFrenteColuna(RestoTab, NLinha, NColuna, Peca).
+
+verificaViraPecasColuna(Tabuleiro, NLinha, NColuna, Peca):-
+  contaPecasColuna(Tabuleiro, NColuna, Peca, C),
+  !,
+  C == 2,
+  verificaEspacosColuna(Tabuleiro, NLinha, NColuna, Peca).
+
+viraPecasColuna([], _,_,[]).
+viraPecasColuna([Linha|T], Peca, NColuna, [L|R]):- alteraPecaColuna(Linha, NColuna, Peca, L), viraPecasColuna(T, Peca, NColuna,R).
+
+alteraPecaColuna(['e'|T], 1,_,['e'|T]).
+alteraPecaColuna([_|T], 1, Peca,[Peca|T]).
+alteraPecaColuna([P|T], NColuna, Peca, [P|R]):-Nc is NColuna - 1, alteraPecaColuna(T, Nc, Peca, R).
+
+
+verificaFimDoJogo([]).
+verificaFimDoJogo([Linha|T]):-verificaFimDoJogoLinha(Linha), verificaFimDoJogo(T).
+
+verificaFimDoJogoLinha([]).
+verificaFimDoJogoLinha([P|T]):- P\='e', verificaFimDoJogoLinha(T).
+
+
+
+
+
+
+
+
+
+
+
+
+/*lel*/

@@ -32,12 +32,22 @@ mostraMensagemDeErro(XMin, XMax):- write('ESCOLHA UM VALOR DE '), write(XMin), w
 
 mostraMensagemJogadaInvalida:- write('Tem de jogar em casas vazias!\n').
 
+jogadaPC(NLinha,NColuna):-
+  write('PC tentou jogar na linha '),
+  write(NLinha),
+  write(' e coluna '),
+  write(NColuna),
+  write('\n'). 
+
 pedeColuna:- write(' Coluna ').
 pedeLinha:- write(' Linha ').
 pedeOpcao:- write(' Opcao: ').
 
 sinalizaJogadorUm:- write('Jogador1: \n').
 sinalizaJogadorDois:- write('Jogador2: \n').
+
+jogador1Venceu:- write('JOGADOR 1 E O VENCEDOR!\n').
+jogador2Venceu:- write('JOGADOR 2 E O VENCEDOR!\n').
 
 printBoard(Tab):- printTabuleiro(Tab).
 

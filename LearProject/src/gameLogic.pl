@@ -1,5 +1,9 @@
 :- use_module(library(lists)).
 
+
+pecaJogadorUm(X):- X = 'x'.
+pecaJogadorDois(X):- X = 'o'.
+
 /*MANIPULAR O TABULEIRO*/
 
 
@@ -171,11 +175,35 @@ alteraPecaColuna([P|T], NColuna, Peca, [P|R]):-Nc is NColuna - 1, alteraPecaColu
 
 
 /*FIM DO JOGO*/
+komi(X):- X is 1.
+
+verificaFim(Tabuleiro):-verificaFimDoJogo(Tabuleiro),
+  pecaJogadorUm(PecaJogadorUm),
+  pecaJogadorDois(PecaJogadorDois),
+  verificaVencedor(Tabuleiro, PecaJogadorUm, PecaJogadorDois).
+
 verificaFimDoJogo([]).
 verificaFimDoJogo([Linha|T]):-verificaFimDoJogoLinha(Linha), verificaFimDoJogo(T).
 
 verificaFimDoJogoLinha([]).
 verificaFimDoJogoLinha([P|T]):- P\='e', verificaFimDoJogoLinha(T).
+
+verificaVencedor(Tabuleiro, PecaJogador1, PecaJogador2):-
+  contaPecas(Tabuleiro, PecaJogador1, X),
+  contaPecas(Tabuleiro, PecaJogador2, Y),
+  komi(K),
+  Xnovo is X + K,
+  vencedor(Xnovo, Y).
+
+vencedor(Xnovo, Y):- Xnovo < Y, jogador2Venceu.
+vencedor(Xnovo, Y):- Xnovo > Y, jogador1Venceu.
+
+contaPecas([],_,0).
+contaPecas([Linha|Resto], Peca, C):-
+  contaPecasLinha(Linha, Peca, X),
+  contaPecas(Resto,Peca,Y),
+  C is X + Y.
+
 
 
 /*VALIDACAO DE JOGADAS*/
@@ -184,7 +212,7 @@ validaJogada(Tabuleiro, NColuna, NLinha):- getPeca(NLinha, NColuna, Tabuleiro, '
 
 tabuleiroVazio(Tab):- Tab = [['e', 'e', 'e', 'e', 'e' ,'e' ,'e'] , ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e']].
 tabuleiroTeste(Tab):- Tab = [['e', 'o', 'o', 'o', 'o' ,'o' ,'o'] , ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'e' ,'e' ,'e']].
-
+tabuleiroCheio(Tab):- Tab = [['x', 'o', 'o', 'o', 'o' ,'o' ,'o'] , ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'x' ,'x' ,'x']].
 
 
 

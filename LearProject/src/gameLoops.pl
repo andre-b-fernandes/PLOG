@@ -1,7 +1,25 @@
-:- ensure_loaded('gameLogic.pl').
-:- ensure_loaded('lear.pl').
+menu:- mostraLogo, mostraOpcoesMenuInicial, leOpcao(1,4,X), opcaoMenuInicial(X), menu.
 
 
-start:-tabuleiroVazio(Tab),joga(Tab).
+jogadorContraJogador:- tabuleiroVazio(X), printBoard(X), jogaJogadorContraJogador(X).
 
-joga(Tab):- write('Linha: '),read(L), write('Coluna: '), read(C),setPeca(L,C,'x',Tab,TabOut),printTabuleiro(TabOut),joga(TabOut).
+jogaJogadorContraJogador(Tabuleiro):-
+  sinalizaJogadorUm,
+  jogaJogador('x', Tabuleiro, TabuleiroOut),
+  printBoard(TabuleiroOut),
+  sinalizaJogadorDois,
+  jogaJogador('o', TabuleiroOut, TabuleiroOut2),
+  printBoard(TabuleiroOut2),
+  ((verificaFimDoJogo(TabuleiroOut2) -> ! );
+   jogaJogadorContraJogador(TabuleiroOut2)).
+
+jogaJogador(Peca, Tabuleiro, TabOut):-
+  pedeLinha,
+  leOpcao(1,7,NLinha),
+  pedeColuna,
+  leOpcao(1,7,NColuna),
+  validaJogada(Tabuleiro, NLinha,NColuna),
+  setPeca(NLinha, NColuna, Peca,Tabuleiro, TabOut2),
+  verificaJogada(TabOut2, NLinha, NColuna, Peca,  TabOut).
+
+jogaJogador(Peca,Tabuleiro,TabOut):- mostraMensagemJogadaInvalida, jogaJogador(Peca,Tabuleiro,TabOut). 

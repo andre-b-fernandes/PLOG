@@ -21,22 +21,53 @@ setPecaColuna(NColuna,[P|Resto],Peca,[P|Mais]) :- Previous is NColuna-1, setPeca
 
 setPecaColuna(1,[_| Resto],Peca,[Peca|Resto]).
 
+/*JOGADA*/
+verificaJogada(Tabuleiro, NLinha, NColuna, Peca,  TabOut):-
+  avancaParaLinha(Tabuleiro, NLinha, L),
+  verificaJogadaLinha(L, NColuna, Peca),
+  viraPecasLinha(Tabuleiro, NLinha, Peca, TabAux),
+  verificaJogadaColuna(TabAux, NLinha, NColuna,Peca),
+  viraPecasColuna(TabAux,Peca, NColuna, TabOut).
+
+verificaJogada(Tabuleiro, NLinha, NColuna, Peca,  TabOut):-
+  verificaJogadaColuna(Tabuleiro, NLinha, NColuna,Peca),
+  viraPecasColuna(Tabuleiro,Peca, NColuna, TabOut).
+
+verificaJogada(Tabuleiro, NLinha, NColuna, Peca,  TabOut):-
+  avancaParaLinha(Tabuleiro, NLinha, L),
+  verificaJogadaLinha(L, NColuna, Peca),
+  viraPecasLinha(Tabuleiro, NLinha, Peca, TabOut).
+
+verificaJogada(Tabuleiro, _, _, _, Tabuleiro).
+
+
+verificaJogadaLinha(Linha,NColuna,Peca):-verificaViraPecasLinha(Linha, NColuna,Peca).
+verificaJogadaColuna(Tabuleiro, NLinha, NColuna, Peca) :- verificaViraPecasColuna(Tabuleiro, NLinha, NColuna, Peca).
+
 /*LINHA*/
 
-viraPecasLinha([],_,[]).
-viraPecasLinha(['e'|R],Peca,['e'|T]):-viraPecasLinha(R,Peca,T), !.
-viraPecasLinha([_|R],Peca,[Peca|T]):-viraPecasLinha(R,Peca,T), !.
+avancaParaLinha([P|_],1,P).
+
+avancaParaLinha([_|Resto],Contador,LinhaAvancada):-
+  Nc is Contador-1,
+  avancaParaLinha(Resto,Nc,LinhaAvancada).
+
+viraLinha([],_,[]).
+viraLinha(['e'|R],Peca,['e'|T]):-viraLinha(R,Peca,T), !.
+viraLinha([_|R],Peca,[Peca|T]):-viraLinha(R,Peca,T), !.
+
+
+viraPecasLinha([Linha|Resto],1,Peca,[NovaLinha|Resto]):- viraLinha(Linha,Peca,NovaLinha).
+viraPecasLinha([Linha|Resto],NLinha, Peca,[Linha|NovoResto]):-
+  Nl is NLinha - 1,
+  viraPecasLinha(Resto, Nl, Peca, NovoResto).
+
+
 
 verificaViraPecasLinha(Linha, NColuna,Peca):-
   contaPecasLinha(Linha, Peca, C),
   C == 2,
   verificaEspacosLinha(Linha,NColuna,Peca).
-
-
-/*posicoesPeca(Linha, Peca, Pos, Po):- posicaoPeca(Linha, )
-
-posicaoPeca([Peca|_], Peca, 1).
-posicaoPeca([_|T], Peca, Pos):- posicaoPeca(T, Peca, NewPos), Pos is NewPos + 1.*/
 
 
 contaPecasLinha([],_,0).
@@ -139,6 +170,7 @@ alteraPecaColuna([_|T], 1, Peca,[Peca|T]).
 alteraPecaColuna([P|T], NColuna, Peca, [P|R]):-Nc is NColuna - 1, alteraPecaColuna(T, Nc, Peca, R).
 
 
+/*FIM DO JOGO*/
 verificaFimDoJogo([]).
 verificaFimDoJogo([Linha|T]):-verificaFimDoJogoLinha(Linha), verificaFimDoJogo(T).
 
@@ -146,10 +178,12 @@ verificaFimDoJogoLinha([]).
 verificaFimDoJogoLinha([P|T]):- P\='e', verificaFimDoJogoLinha(T).
 
 
+/*VALIDACAO DE JOGADAS*/
+validaJogada(Tabuleiro, NColuna, NLinha):- getPeca(NLinha, NColuna, Tabuleiro, 'e').
 
 
-
-
+tabuleiroVazio(Tab):- Tab = [['e', 'e', 'e', 'e', 'e' ,'e' ,'e'] , ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e']].
+tabuleiroTeste(Tab):- Tab = [['e', 'o', 'o', 'o', 'o' ,'o' ,'o'] , ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'e' ,'e' ,'e']].
 
 
 

@@ -70,6 +70,13 @@ sinalizaJogadorDois:- write('Jogador2: \n').
 jogador1Venceu:- write('JOGADOR 1 E O VENCEDOR!\n').
 jogador2Venceu:- write('JOGADOR 2 E O VENCEDOR!\n').
 
+imprimePontuacoes(JogadorUm, JogadorDois):-
+  write('JOGADOR 1: '),
+  write(JogadorUm),
+  write('\nJOGADOR 2: '),
+  write(JogadorDois),
+  write('\n').
+
 printBoard(Tab):- printTabuleiro(Tab).
 
 printTabuleiro([H|T]):- write('\n'), write('         '), printLinha(H), write('\n'), printTabuleiro(T).

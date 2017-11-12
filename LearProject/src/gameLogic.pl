@@ -218,8 +218,8 @@ verificaVencedor(Tabuleiro, PecaJogador1, PecaJogador2):-
   Xnovo is X + K,
   vencedor(Xnovo, Y).
 
-vencedor(Xnovo, Y):- Xnovo < Y, jogador2Venceu.
-vencedor(Xnovo, Y):- Xnovo > Y, jogador1Venceu.
+vencedor(Xnovo, Y):- Xnovo < Y, jogador2Venceu, imprimePontuacoes(Xnovo,Y).
+vencedor(Xnovo, Y):- Xnovo > Y, jogador1Venceu, imprimePontuacoes(Xnovo,Y).
 
 contaPecas([],_,0).
 contaPecas([Linha|Resto], Peca, C):-

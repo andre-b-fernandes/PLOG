@@ -29,9 +29,9 @@ jogaJogadorContraJogador(_,_,_).
 
 jogaJogador(Peca, Tabuleiro, TabOut):-
   pedeLinha,
-  leOpcao(1,7,NLinha),
+  leOpcao(1,8,NLinha),
   pedeColuna,
-  leOpcao(1,7,NColuna),
+  leOpcao(1,8,NColuna),
   validaJogada(Tabuleiro, NColuna,NLinha),
   setPeca(NLinha, NColuna, Peca,Tabuleiro, TabOut2),
   verificaJogada(TabOut2, NLinha, NColuna, Peca,  TabOut),!.
@@ -61,18 +61,6 @@ jogaPCContraPC(Tabuleiro, PecaJogadorUm, PecaJogadorDois):-
 
 jogaPCContraPC(_,_,_).
 
-jogaPC(Peca,Tabuleiro,TabOut):-
-  sleep(1),
-  obtemJogadasPossiveis(Tabuleiro,1,Jogadas),
-  numeroJogadasPossiveis(Jogadas, Numero),
-  NumeroJogadas is Numero + 1,
-  random(1,NumeroJogadas,Jogada),
-  selecionaJogada(Jogadas, Jogada, [NLinha|NCol]),
-  NColuna is NCol,
-  jogadaPC(NLinha,NColuna),
-  setPeca(NLinha, NColuna, Peca,Tabuleiro, TabOut2),
-  verificaJogada(TabOut2, NLinha, NColuna, Peca,  TabOut),!.
-
 /*JOGA CONTRA PC EASY*/
 jogadorContraPC:-
   tabuleiroVazio(X),
@@ -96,3 +84,23 @@ jogaContraPC(_,_,_).
 
 
 /*JOGA CONTRA PC HARD*/
+
+jogadorContraPCIA:-
+  tabuleiroVazio(X),
+  printBoard(X),
+  pecaJogadorUm(A),
+  pecaJogadorDois(B),
+  jogaContraPCIA(X,A,B).
+
+jogaContraPCIA(Tabuleiro, PecaJogadorUm, PecaJogadorDois):-
+  sinalizaJogadorUm,
+  jogaJogador(PecaJogadorUm, Tabuleiro, TabuleiroOut),
+  printBoard(TabuleiroOut),
+  \+verificaFim(TabuleiroOut),
+  sinalizaJogadorDois,
+  jogaPCIA(PecaJogadorDois, TabuleiroOut, TabuleiroOut2),
+  printBoard(TabuleiroOut2),
+  \+verificaFim(TabuleiroOut2),
+  jogaContraPCIA(TabuleiroOut2,PecaJogadorUm,PecaJogadorDois).
+
+jogaContraPCIA(_,_,_).

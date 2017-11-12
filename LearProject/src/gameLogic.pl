@@ -1,12 +1,10 @@
 :- use_module(library(lists)).
 
-
+/*PECAS*/
 pecaJogadorUm(X):- X = 'x'.
 pecaJogadorDois(X):- X = 'o'.
 
 /*MANIPULAR O TABULEIRO*/
-
-
 getPeca(NLinha, NColuna, Tabuleiro, Peca):- getPecaLinha(NLinha,Tabuleiro,Linha), getPecaColuna(NColuna, Linha, Peca).
 
 getPecaLinha(NLinha, [_|T], Linha):- Previous is NLinha-1, getPecaLinha(Previous, T, Linha).
@@ -26,8 +24,6 @@ setPecaColuna(NColuna,[P|Resto],Peca,[P|Mais]) :- Previous is NColuna-1, setPeca
 setPecaColuna(1,[_| Resto],Peca,[Peca|Resto]).
 
 /*JOGADA*/
-/*[[3,4],[5,6],[7,8],[9,10]]*/
-
 selecionaJogada([Jogada|_], 1, Jogada).
 selecionaJogada([_|RestoJogadas], NumeroJogada, Jog):-
   Ng is NumeroJogada - 1,
@@ -45,7 +41,7 @@ obtemJogadasPossiveis([Linha|Resto], NLinha,Jogadas):-
 
 adicionaJogadas([], _,_,[]).
 
-adicionaJogadas(['e'|Resto], NLinha, NColuna, [[NLinha,NColuna]|RestoJogadas]):-
+adicionaJogadas(['v'|Resto], NLinha, NColuna, [[NLinha,NColuna]|RestoJogadas]):-
   Nc is NColuna + 1,
   adicionaJogadas(Resto,NLinha, Nc, RestoJogadas).
 
@@ -84,7 +80,7 @@ avancaParaLinha([_|Resto],Contador,LinhaAvancada):-
   avancaParaLinha(Resto,Nc,LinhaAvancada).
 
 viraLinha([],_,[]).
-viraLinha(['e'|R],Peca,['e'|T]):-viraLinha(R,Peca,T), !.
+viraLinha(['v'|R],Peca,['v'|T]):-viraLinha(R,Peca,T), !.
 viraLinha([_|R],Peca,[Peca|T]):-viraLinha(R,Peca,T), !.
 
 
@@ -135,16 +131,16 @@ verificaAtras([_|Resto], NColuna, Peca):-
 verificaAtrasPeca([_|_], 1).
 
 verificaAtrasPeca([P|Resto], NColuna):-
-  P \= 'e',
+  P \= 'v',
   Nc is NColuna-1,
   verificaAtrasPeca(Resto,Nc).
 
 verificaFrente([Peca|_],_,Peca).
 
 verificaFrente([P|Resto],NColuna,Peca):-
-  P\='e',
+  P\='v',
   Nc is NColuna+1,
-  Nc =< 7,
+  Nc =< 8,
   verificaFrente(Resto,Nc,Peca).
 
 
@@ -159,9 +155,9 @@ contaPecasColuna([_|Mais], Coluna,Peca,N):-contaPecasColuna(Mais, Coluna, Peca, 
 verificaFrenteColuna([Linha|_],_, NColuna, Peca):-nth1(NColuna,Linha,Peca).
 verificaFrenteColuna([Linha|Resto], NLinha, NColuna, Peca):-
    nth1(NColuna, Linha,X),
-   X \= 'e',
+   X \= 'v',
    Nl is NLinha + 1,
-   Nl =< 7,
+   Nl =< 8,
    verificaFrenteColuna(Resto,Nl, NColuna, Peca).
 
 
@@ -177,7 +173,7 @@ verificaAtrasColuna([_|Resto], NLinha, NColuna, Peca):-
 verificaAtrasColunaPeca([_|_], 1, _).
 verificaAtrasColunaPeca([Linha|Resto], NLinha, NColuna):-
    nth1(NColuna, Linha, X),
-   X \= 'e',
+   X \= 'v',
    Nl is NLinha -1,
    verificaAtrasColunaPeca(Resto, Nl, NColuna).
 
@@ -196,7 +192,7 @@ verificaViraPecasColuna(Tabuleiro, NLinha, NColuna, Peca):-
 viraPecasColuna([], _,_,[]).
 viraPecasColuna([Linha|T], Peca, NColuna, [L|R]):- alteraPecaColuna(Linha, NColuna, Peca, L), viraPecasColuna(T, Peca, NColuna,R).
 
-alteraPecaColuna(['e'|T], 1,_,['e'|T]).
+alteraPecaColuna(['v'|T], 1,_,['v'|T]).
 alteraPecaColuna([_|T], 1, Peca,[Peca|T]).
 alteraPecaColuna([P|T], NColuna, Peca, [P|R]):-Nc is NColuna - 1, alteraPecaColuna(T, Nc, Peca, R).
 
@@ -213,7 +209,7 @@ verificaFimDoJogo([]).
 verificaFimDoJogo([Linha|T]):-verificaFimDoJogoLinha(Linha), verificaFimDoJogo(T).
 
 verificaFimDoJogoLinha([]).
-verificaFimDoJogoLinha([P|T]):- P\='e', verificaFimDoJogoLinha(T).
+verificaFimDoJogoLinha([P|T]):- P\='v', verificaFimDoJogoLinha(T).
 
 verificaVencedor(Tabuleiro, PecaJogador1, PecaJogador2):-
   contaPecas(Tabuleiro, PecaJogador1, X),
@@ -234,12 +230,12 @@ contaPecas([Linha|Resto], Peca, C):-
 
 
 /*VALIDACAO DE JOGADAS*/
-validaJogada(Tabuleiro, NColuna, NLinha):- getPeca(NLinha, NColuna, Tabuleiro, 'e').
+validaJogada(Tabuleiro, NColuna, NLinha):- getPeca(NLinha, NColuna, Tabuleiro, 'v').
 
 
-tabuleiroVazio(Tab):- Tab = [['e', 'e', 'e', 'e', 'e' ,'e' ,'e'] , ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e'], ['e', 'e', 'e', 'e', 'e' ,'e' ,'e']].
-tabuleiroTeste(Tab):- Tab = [['e', 'o', 'o', 'o', 'o' ,'o' ,'o'] , ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'e' ,'e' ,'e']].
-tabuleiroCheio(Tab):- Tab = [['x', 'o', 'o', 'o', 'o' ,'o' ,'o'] , ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o'], ['o', 'o', 'o', 'o', 'x' ,'x' ,'x']].
+tabuleiroTeste(Tab):- Tab = [['v', 'o', 'o', 'o', 'o' ,'o' ,'o','v'] , ['o', 'o', 'o', 'o', 'o' ,'o' ,'o','v'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o','v'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o','v'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o','v'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o','v'], ['o', 'o', 'o', 'o', 'v' ,'v' ,'v','v'],['o', 'o', 'o', 'o', 'v' ,'v' ,'v','v']].
+tabuleiroVazio(Tab):- Tab = [['v', 'v', 'v', 'v', 'v' ,'v' ,'v','v'] , ['v', 'v', 'v', 'v', 'v' ,'v' ,'v','v'], ['v', 'v', 'v', 'v', 'v' ,'v' ,'v','v'], ['v', 'v', 'v', 'v', 'v' ,'v' ,'v','v'], ['v', 'v', 'v', 'v', 'v' ,'v' ,'v','v'], ['v', 'v', 'v', 'v', 'v' ,'v' ,'v','v'], ['v', 'v', 'v', 'v', 'v' ,'v' ,'v','v'],['v', 'v', 'v', 'v', 'v' ,'v' ,'v','v']].
+tabuleiroCheio(Tab):- Tab = [['x', 'o', 'o', 'o', 'o' ,'o' ,'o','v'] , ['o', 'o', 'o', 'o', 'o' ,'o' ,'o','v'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o','v'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o','v'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o','v'], ['o', 'o', 'o', 'o', 'o' ,'o' ,'o','v'], ['o', 'o', 'o', 'o', 'x' ,'x' ,'x','v'],['o', 'o', 'o', 'o', 'x' ,'x' ,'x','v']].
 
 
 

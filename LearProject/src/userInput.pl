@@ -8,7 +8,7 @@ opcaoMenuInicial(3):- pcContraPC.
 opcaoMenuInicial(4):- abort.
 
 opcaoJogarContraPC(1):- jogadorContraPC.
-opcaoJogarContraPC(2).
+opcaoJogarContraPC(2):- jogadorContraPCIA.
 opcaoJogarContraPC(3).
 
 /*opcaoMenuInicial(1):-

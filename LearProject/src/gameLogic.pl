@@ -26,6 +26,33 @@ setPecaColuna(NColuna,[P|Resto],Peca,[P|Mais]) :- Previous is NColuna-1, setPeca
 setPecaColuna(1,[_| Resto],Peca,[Peca|Resto]).
 
 /*JOGADA*/
+/*[[3,4],[5,6],[7,8],[9,10]]*/
+
+selecionaJogada([Jogada|_], 1, Jogada).
+selecionaJogada([_|RestoJogadas], NumeroJogada, Jog):-
+  Ng is NumeroJogada - 1,
+  selecionaJogada(RestoJogadas, Ng, Jog).
+
+numeroJogadasPossiveis([],0).
+numeroJogadasPossiveis([_|RestoJogadas], C):- numeroJogadasPossiveis(RestoJogadas, X), C is X + 1.
+
+obtemJogadasPossiveis([], _, []).
+obtemJogadasPossiveis([Linha|Resto], NLinha,Jogadas):-
+  adicionaJogadas(Linha, NLinha, 1,JogadasAux),
+  Nl is NLinha + 1 ,
+  obtemJogadasPossiveis(Resto,Nl,JogadasAux2),
+  append(JogadasAux,JogadasAux2,Jogadas).
+
+adicionaJogadas([], _,_,[]).
+
+adicionaJogadas(['e'|Resto], NLinha, NColuna, [[NLinha,NColuna]|RestoJogadas]):-
+  Nc is NColuna + 1,
+  adicionaJogadas(Resto,NLinha, Nc, RestoJogadas).
+
+adicionaJogadas([_|Resto], NLinha, NColuna, Jogadas):-
+  Nc is NColuna + 1,
+  adicionaJogadas(Resto,NLinha, Nc, Jogadas).
+
 verificaJogada(Tabuleiro, NLinha, NColuna, Peca,  TabOut):-
   avancaParaLinha(Tabuleiro, NLinha, L),
   verificaJogadaLinha(L, NColuna, Peca),

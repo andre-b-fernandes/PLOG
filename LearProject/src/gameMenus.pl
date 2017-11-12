@@ -28,6 +28,8 @@ mostraLogo:- write('LEAR GAME\n').
 
 mostraOpcoesMenuInicial:- write('       MENU INICIAL\n1. JOGADOR VS JOGADOR\n2. JOGADOR VS PC\n3. PC VS PC\n4. EXIT\n').
 
+mostraOpcoesJogarContraPC:-write('ESCOLHA A DIFICULDADE\n1. EASY\n2. HARD\n3. BACK\n').
+
 mostraMensagemDeErro(XMin, XMax):- write('ESCOLHA UM VALOR DE '), write(XMin), write( ' A '), write(XMax), write('\n').
 
 mostraMensagemJogadaInvalida:- write('Tem de jogar em casas vazias!\n').
@@ -37,7 +39,7 @@ jogadaPC(NLinha,NColuna):-
   write(NLinha),
   write(' e coluna '),
   write(NColuna),
-  write('\n'). 
+  write('\n').
 
 pedeColuna:- write(' Coluna ').
 pedeLinha:- write(' Linha ').

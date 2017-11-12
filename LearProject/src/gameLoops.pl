@@ -1,6 +1,9 @@
 :- use_module(library(random)).
+:- use_module(library(system)).
 
 menu:- mostraLogo, mostraOpcoesMenuInicial, leOpcao(1,4,X), opcaoMenuInicial(X), menu.
+
+menuJogarContraPC:- mostraOpcoesJogarContraPC, leOpcao(1,3,X), opcaoJogarContraPC(X).
 
 
 /*JOGADOR VS JOGADOR*/
@@ -37,12 +40,59 @@ jogaJogador(Peca,Tabuleiro,TabOut):- mostraMensagemJogadaInvalida, jogaJogador(P
 
 
 /*PC VS PC*/
+
+pcContraPC:-
+  tabuleiroVazio(X),
+  printBoard(X),
+  pecaJogadorUm(A),
+  pecaJogadorDois(B),
+  jogaPCContraPC(X,A,B).
+
+jogaPCContraPC(Tabuleiro, PecaJogadorUm, PecaJogadorDois):-
+  sinalizaJogadorUm,
+  jogaPC(PecaJogadorUm, Tabuleiro, TabuleiroOut),
+  printBoard(TabuleiroOut),
+  \+verificaFim(TabuleiroOut),
+  sinalizaJogadorDois,
+  jogaPC(PecaJogadorDois, TabuleiroOut, TabuleiroOut2),
+  printBoard(TabuleiroOut2),
+  \+verificaFim(TabuleiroOut2),
+  jogaPCContraPC(TabuleiroOut2,PecaJogadorUm,PecaJogadorDois).
+
+jogaPCContraPC(_,_,_).
+
 jogaPC(Peca,Tabuleiro,TabOut):-
-  random_between(1,7,NLinha),
-  random_between(1,7,NColuna),
+  sleep(1),
+  obtemJogadasPossiveis(Tabuleiro,1,Jogadas),
+  numeroJogadasPossiveis(Jogadas, Numero),
+  NumeroJogadas is Numero + 1,
+  random(1,NumeroJogadas,Jogada),
+  selecionaJogada(Jogadas, Jogada, [NLinha|NCol]),
+  NColuna is NCol,
   jogadaPC(NLinha,NColuna),
-  validaJogada(Tabuleiro, NColuna,NLinha),
   setPeca(NLinha, NColuna, Peca,Tabuleiro, TabOut2),
   verificaJogada(TabOut2, NLinha, NColuna, Peca,  TabOut),!.
 
-jogaPC(Peca,Tabuleiro,TabOut):- mostraMensagemJogadaInvalida, jogaPC(Peca,Tabuleiro,TabOut).
+/*JOGA CONTRA PC EASY*/
+jogadorContraPC:-
+  tabuleiroVazio(X),
+  printBoard(X),
+  pecaJogadorUm(A),
+  pecaJogadorDois(B),
+  jogaContraPC(X,A,B).
+
+jogaContraPC(Tabuleiro, PecaJogadorUm, PecaJogadorDois):-
+  sinalizaJogadorUm,
+  jogaJogador(PecaJogadorUm, Tabuleiro, TabuleiroOut),
+  printBoard(TabuleiroOut),
+  \+verificaFim(TabuleiroOut),
+  sinalizaJogadorDois,
+  jogaPC(PecaJogadorDois, TabuleiroOut, TabuleiroOut2),
+  printBoard(TabuleiroOut2),
+  \+verificaFim(TabuleiroOut2),
+  jogaContraPC(TabuleiroOut2,PecaJogadorUm,PecaJogadorDois).
+
+jogaContraPC(_,_,_).
+
+
+/*JOGA CONTRA PC HARD*/

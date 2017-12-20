@@ -1,7 +1,0 @@
-Triangulo Equilátero de lado N.
-
-Dentro do triângulo tem (n-1)^2 triângulos.
-
-1º Guardar horizontalmente numa lista os valores e coloca-los todos diferentes, e de domínio de 1 a N.
-
-2º Guardar diagonalmente da esquerda para a direita e colocá-los diferentes.

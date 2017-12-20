@@ -1,7 +1,5 @@
 :-use_module(library(lists)).
 
-
-
 mostraTrid(Triangulo):-
   write('\n'),
   length(Triangulo, Tam),

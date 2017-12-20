@@ -7,6 +7,7 @@ resolveTrid(Lado, Somas, Triangulo):-
   dominioDiagonalEsquerda(Triangulo, 0, Lado),
   L is Lado - 1,
   dominioDiagonalDireita(Triangulo, L),
+  !,  
   dominioSomas(Triangulo, Somas),
   tridLabel(Triangulo).
 
@@ -60,6 +61,7 @@ dominioDiagonalEsquerdaAux([L|R], [H|T], NumeroElemento, NumeroMaxLista):-
 dominioSomas(_, []).
 dominioSomas(Triangulo, [Val - H|T]):-
   formaLista(Triangulo, H, Lista),
+  !,
   sum(Lista, #=, Val),
   dominioSomas(Triangulo, T).
 

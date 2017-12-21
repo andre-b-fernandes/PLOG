@@ -7,9 +7,11 @@ resolveTrid(Lado, Somas, Triangulo):-
   dominioDiagonalEsquerda(Triangulo, 0, Lado),
   L is Lado - 1,
   dominioDiagonalDireita(Triangulo, L),
-  !,  
+  !,
   dominioSomas(Triangulo, Somas),
   tridLabel(Triangulo).
+
+  
 
 criaTriangulo(Lado, Triangulo):- geraTriangulo(Lado,Triangulo).
 

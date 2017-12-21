@@ -1,5 +1,13 @@
 :-use_module(library(lists)).
 
+displayLogo:-write('        TRID \n').
+
+naoHaSolucoes:-write('      Nao se encontraram solucoes!\n\n\n\n').
+
+displayInputInicial:- write('       Nome do ficheiro a resolver(s para sair): ').
+
+tempoDeExecucao(ExecutionTime):-  write('Execution took '), write(ExecutionTime), write(' ms.'), nl.
+
 mostraTrid(Triangulo):-
   write('\n'),
   length(Triangulo, Tam),

@@ -5,4 +5,4 @@
 
 
 start:-menu.
-start:- naoHaSolucoes, menu.
+start:- naoHaSolucoes, start.

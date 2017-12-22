@@ -12,6 +12,7 @@ menu:-
   ExecutionTime is  Stop - Start,
   tempoDeExecucao(ExecutionTime),
   mostraTrid(Triangulo),
+  !,
   menu.
 
 menu.

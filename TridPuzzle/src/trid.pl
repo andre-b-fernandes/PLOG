@@ -9,9 +9,10 @@ resolveTrid(Lado, Somas, Triangulo):-
   dominioDiagonalDireita(Triangulo, L),
   !,
   dominioSomas(Triangulo, Somas),
+  !,
   tridLabel(Triangulo).
 
-  
+
 
 criaTriangulo(Lado, Triangulo):- geraTriangulo(Lado,Triangulo).
 
@@ -85,5 +86,5 @@ formaListaAuxLinha([_|T], Resto, Contador,Valor):-
 
 tridLabel([]).
 tridLabel([H|T]):-
-  labeling([],H),
+  labeling([ff],H),
   tridLabel(T).

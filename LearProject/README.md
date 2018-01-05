@@ -17,6 +17,6 @@
 
 
 ## Images
-![alt text](https://github.com/Marko50/PLOG/blob/master/LearProject/Selec%C3%A7%C3%A3o_022.png)
 ![alt text](https://github.com/Marko50/PLOG/blob/master/LearProject/Selec%C3%A7%C3%A3o_023.png)
+![alt text](https://github.com/Marko50/PLOG/blob/master/LearProject/Selec%C3%A7%C3%A3o_022.png)
 

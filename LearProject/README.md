@@ -12,5 +12,6 @@
 - [X] Human vs Human
 - [X] Human vs Robot Easy
 - [X] Human vs Robot Hard (IA)
+- [X] Robot vs Robot Simulation
 
 
